@@ -3,11 +3,13 @@ import { ExampleModule } from './example/example.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { configSchemaValidation } from './config.schema';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`stage.${process.env.STAGE}.env`],
+      validationSchema: configSchemaValidation,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
