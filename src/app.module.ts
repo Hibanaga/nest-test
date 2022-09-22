@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ExampleModule } from './example/example.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configSchemaValidation } from './config.schema';
 
@@ -28,7 +28,7 @@ import { configSchemaValidation } from './config.schema';
       },
     }),
     ExampleModule,
-    UsersModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
