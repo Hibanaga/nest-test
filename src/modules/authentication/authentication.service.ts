@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
 import { RegisterAuthenticationDto } from './dto/register-authentication.dto';
 import { LoginAuthenticationDto } from './dto/login-authentication.dto';
@@ -16,17 +15,7 @@ export class AuthenticationService {
     try {
       const user = await this.userService.getByEmail(loginData.email);
 
-      const isPasswordMatching = await bcrypt.compare(
-        loginData.password,
-        user.password,
-      );
-
-      if (!isPasswordMatching) {
-        throw new HttpException(
-          'Wrong credentials provided',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      await this.userService.verifyPassword(loginData.password, user.password);
 
       return { status: HttpStatus.OK, email: user.email };
     } catch (error) {

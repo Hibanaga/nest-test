@@ -32,19 +32,18 @@ export class UserService {
     );
   }
 
-  async register(newUser: RegisterAuthenticationDto): Promise<User> {
+  async register(
+    newUser: RegisterAuthenticationDto,
+  ): Promise<{ status: number; email: string }> {
     const hashedPassword = await bcrypt.hash(newUser.password, 10);
     try {
       const createdUser = await this.usersRepository.create({
         ...newUser,
         password: hashedPassword,
       });
-      console.log('createdUser: ', createdUser);
       await this.usersRepository.save(createdUser);
-      createdUser.password = undefined;
-      console.log('createdUser: ', createdUser);
 
-      return createdUser;
+      return { status: HttpStatus.OK, email: createdUser.email };
     } catch (error) {
       if (error?.code === PostressErrorCodes.UniqueViolation) {
         throw new HttpException(
@@ -55,6 +54,20 @@ export class UserService {
       throw new HttpException(
         'Something wrong',
         HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async verifyPassword(plainTextPassword: string, hashedPassword: string) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
+    );
+
+    if (!isPasswordMatching) {
+      throw new HttpException(
+        'Wrong credentials provided',
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
