@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ExampleModule } from './example/example.module';
+import { ExampleModule } from './modules/example/example.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
+import { UserModule } from './modules/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configSchemaValidation } from './config.schema';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { AuthenticationService } from './modules/authentication/authentication.service';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { configSchemaValidation } from './config.schema';
     }),
     ExampleModule,
     UserModule,
+    AuthenticationModule,
   ],
   controllers: [],
   providers: [],
