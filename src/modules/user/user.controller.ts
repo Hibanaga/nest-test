@@ -16,9 +16,4 @@ export class UserController {
   findUser(@Param() email: string) {
     return this.usersService.getByEmail(email);
   }
-
-  @Post()
-  createUser(@Body() userData: CreateUserDto) {
-    return this.usersService.create(userData);
-  }
 }

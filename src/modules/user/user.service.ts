@@ -39,7 +39,8 @@ export class UserService {
         ...newUser,
         password: hashedPassword,
       });
-      await this.usersRepository.save(newUser);
+      console.log('createdUser: ', createdUser);
+      await this.usersRepository.save(createdUser);
       createdUser.password = undefined;
       console.log('createdUser: ', createdUser);
 
