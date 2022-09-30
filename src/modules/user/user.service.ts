@@ -2,10 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RegisterAuthenticationDto } from '../authentication/dto/register-authentication.dto';
 import { PostressErrorCodes } from '../../types/Postgres.types';
+import { IAuthSuccessResponse } from '../../types/AuthGlobal.types';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
     return this.usersRepository.find({});
   }
 
-  async getByEmail(email: string) {
+  async logIn(email: string) {
     const user: Promise<User | null> = this.usersRepository.findOne({
       where: { email },
     });
@@ -32,9 +32,9 @@ export class UserService {
     );
   }
 
-  async register(
+  async signUp(
     newUser: RegisterAuthenticationDto,
-  ): Promise<{ status: number; email: string }> {
+  ): Promise<IAuthSuccessResponse> {
     const hashedPassword = await bcrypt.hash(newUser.password, 10);
     try {
       const createdUser = await this.usersRepository.create({

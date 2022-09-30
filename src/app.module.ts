@@ -5,10 +5,22 @@ import { UserModule } from './modules/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configSchemaValidation } from './config.schema';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
-import { AuthenticationService } from './modules/authentication/authentication.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get('PRIVATE_KEY'),
+          signOptions: {
+            expiresIn: 36000,
+          },
+        };
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: [`stage.${process.env.STAGE}.env`],
       validationSchema: configSchemaValidation,

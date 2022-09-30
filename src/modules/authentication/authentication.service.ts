@@ -8,12 +8,12 @@ export class AuthenticationService {
   constructor(private readonly userService: UserService) {}
 
   public async registerUser(registrationData: RegisterAuthenticationDto) {
-    return this.userService.register(registrationData);
+    return this.userService.signUp(registrationData);
   }
 
-  public async loginUser(loginData: LoginAuthenticationDto) {
+  public async validateUser(loginData: LoginAuthenticationDto) {
     try {
-      const user = await this.userService.getByEmail(loginData.email);
+      const user = await this.userService.logIn(loginData.email);
 
       await this.userService.verifyPassword(loginData.password, user.password);
 
